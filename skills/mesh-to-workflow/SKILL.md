@@ -16,7 +16,7 @@ or any directory containing a `config.yaml` with a `mesh:` key.
 
 1. **Normalize** — run the bundled script; never parse config.yaml by hand:
    ```bash
-   python3 /Users/god/ai/skills/mesh-to-workflow/scripts/mesh_to_json.py <mesh-dir>
+   python3 <skill-dir>/scripts/mesh_to_json.py <mesh-dir>
    ```
    Output: mesh metadata, classified `topology`, routing, agents with `prompt_text`
    inlined, and a `lossy` list of features with no workflow equivalent.
@@ -32,14 +32,13 @@ or any directory containing a `config.yaml` with a `mesh:` key.
    mapping.md conventions: header comment block, pure-literal `meta`, `PROMPTS` /
    `MODELS` / schema consts, control flow readable in one screen, `log()` at every
    hop, one `// LOSSY:` comment per dropped feature.
-   For the Workflow tool API beyond mapping.md, consult the workflow-author spec:
-   `/Users/god/ai/skills/workflow-author/references/workflow-tool-spec.md`.
+   For the Workflow tool API beyond mapping.md, consult the workflow-tool-spec.md reference from the workflow-author skill.
 
 4. **Validate** — do NOT use `node --check` (top-level `return` is legal in the
    workflow runtime but fails module parsing). Use the bundled checker, which
    compiles the body as an AsyncFunction exactly like the runtime:
    ```bash
-   node /Users/god/ai/skills/mesh-to-workflow/scripts/check_workflow.js .claude/workflows/<mesh>.js
+   node <skill-dir>/scripts/check_workflow.js .claude/workflows/<mesh>.js
    ```
    Then re-read the
    script once as a reviewer: every routing destination reachable, every loop
