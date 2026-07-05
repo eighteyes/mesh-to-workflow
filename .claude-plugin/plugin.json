@@ -1,0 +1,6 @@
+{
+  "name": "mesh-to-workflow",
+  "description": "Compile a tx mesh into a deterministic Workflow orchestration script.",
+  "version": "0.1.0",
+  "author": { "name": "eighteyes" }
+}
