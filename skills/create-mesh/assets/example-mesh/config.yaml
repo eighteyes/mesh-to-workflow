@@ -1,0 +1,41 @@
+# Example portable mesh: bug-triage
+# Demonstrates: branching status routing, HITL (__ask__), quality loop, workspace.
+mesh: bug-triage
+description: Reproduce a reported bug, locate the fault, and propose a reviewed fix
+
+capability:
+  domain: [dev]
+  interaction: [gate-exit]
+
+entry_point: reproducer
+completion_agents: [fixer]
+routing_mode: agent
+
+routing:
+  reproducer:
+    reproduced:     { locator: "repro steps confirmed" }
+    cannot-reproduce: { __ask__: "need more detail from the reporter" }
+  locator:
+    located:        { fixer: "fault isolated to specific code" }
+    ambiguous:      { reproducer: "multiple candidate causes - need tighter repro" }
+  fixer:
+    complete:       { __done__: "fix proposed and self-checked" }
+    blocked:        { __ask__: "fix requires a decision (API change / breaking)" }
+
+iteration:
+  maxIterations: 3
+  onFail: halt
+
+workspace:
+  path: .ai/output/bug-triage
+
+agents:
+  - name: reproducer
+    model: sonnet
+    prompt: triage/reproducer.md
+  - name: locator
+    model: sonnet
+    prompt: triage/locator.md
+  - name: fixer
+    model: opus
+    prompt: triage/fixer.md

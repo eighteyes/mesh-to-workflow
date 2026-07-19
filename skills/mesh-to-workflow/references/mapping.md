@@ -50,6 +50,8 @@ while (current !== 'done' && ++hops <= MAX_HOPS) {
 
 3. Routes to `core` (blocked/ask) become `return { status: 'blocked', ... }` — never
    swallowed, never AskUserQuestion (unavailable inside workflows). See HITL bridging.
+   Portable meshes (create-mesh) write `__ask__` and `__done__` instead of `core`:
+   treat `__ask__` exactly like an ask-route to core, `__done__` as run completion.
 4. `iteration` config (quality loops) → `for (let i = 0; i < maxIterations; i++)` with
    the judge's verdict as the break condition; `onFail: 'halt'` → return a failure object.
 5. Carry state between hops explicitly. Meshes pass context via message files; the
@@ -109,7 +111,7 @@ the top of the emitted script (`// LOSSY: <field> — <note>`) and apply the bri
 | `load` (preload) | "Read these files first: ..." line in the prompt |
 | `workspace` | Keep mesh-level output path as a const; instruct writer agents to Write there |
 | `fragments` | Resolve at compile time (read fragment YAMLs, compose, inline the result) |
-| FSM file-gates | Scripts have NO fs access — gate checks become micro-agents (`model: 'haiku', effort: 'low'`, schema `{passed: boolean}`); near-deterministic, pennies per gate |
+| FSM file-gates | Scripts have NO fs access — gate checks become micro-agents (`model: 'haiku', effort: 'low'`, schema `{passed: boolean}`); near-deterministic, pennies per gate. For TRUE determinism: emit a gate agentType whose `hooks:` frontmatter runs the actual gate script in shell — hooks execute deterministically, the agent just relays the result |
 | `persistence` / `continuation` | UNSUPPORTED — each agent() is fresh. `resumeFromRunId` gives crash-resume of a run, not session continuity |
 | `max_turns` | UNSUPPORTED — no per-agent turn cap; rely on budget + prompt scoping |
 
